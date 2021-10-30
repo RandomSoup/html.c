@@ -11,25 +11,47 @@ extern "C" {
 #include "html_common.h"
 #include "html_meta.i"
 
-#define HTML_PRINT_TAG(tag, ...) for ( \
+#define HTML_PRINT_TAG(tag, type, ...) for ( \
 	int _html_break = ( \
-		html_tag_open(tag, HTML_STR(__VA_ARGS__)), 1 \
+		html.open(tag, HTML_STR(__VA_ARGS__), type), 1 \
 	); \
 	_html_break; \
-	_html_break = 0, html_tag_close(tag) \
+	_html_break = 0, !type ? html.close(tag) : (void)0 \
 )
 
-typedef int (*html_printf_t)(const char* restrict fmt, ...);
-typedef void (*html_tag_open_t)(char* tag, char* attrs);
-typedef void (*html_tag_close_t)(char* tag);
+#define HTML_CUSTOM_TAG(tag, open_cb, close_cb, ...) for ( \
+	int _html_break = ( \
+		html.open(tag, HTML_STR(__VA_ARGS__), HTML_NORMAL), \
+		open_cb(tag, HTML_STR(__VA_ARGS__)), 1 \
+	); \
+	_html_break; \
+	_html_break = 0, html.close(tag), close_cb(tag) \
+)
 
-extern thread_local html_printf_t html_printf;
-extern thread_local html_tag_open_t html_tag_open;
-extern thread_local html_tag_close_t html_tag_close;
+typedef enum html_type_t
+{
+	HTML_NORMAL,
+	HTML_SCLOSE,
+	HTML_NCLOSE
+} html_type_t;
+
+typedef int (*html_printf_t)(const char* restrict fmt, ...);
+typedef void (*html_open_t)(char* tag, char* attrs, html_type_t type);
+typedef void (*html_close_t)(char* tag);
+
+typedef struct html_t
+{
+	html_printf_t printf;
+	html_open_t open;
+	html_close_t close;
+	void* udata;
+} html_t;
+
+extern thread_local html_t html;
 
 int _html_printf(const char* restrict fmt, ...);
-void _html_tag_open(char* tag, char* attrs);
-void _html_tag_close(char* tag);
+void _html_open(char* tag, char* attrs, html_type_t type);
+void _html_close(char* tag);
 
 #ifdef __cplusplus
 }

@@ -8,30 +8,23 @@
 #define IFNDEF HASH ifndef
 #define ENDIF HASH endif
 
-#ifdef PREFIX
-#define HTML_CAT1(a, b) a##b
-#else
-#define HTML_CAT1(a, b) b
-#endif /* PREFIX */
-
-#define HTML_CAT0(a, b) HTML_CAT1(a, b)
-#define HTML_CAT(a, b) HTML_CAT0(a, b)
-
-#define HTML_TAG(name) DEFINE HTML_CAT(PREFIX, name)(...) HTML_PRINT_TAG(HTML_STR(name), __VA_ARGS__)
+#define HTML_TAG0(name, type) DEFINE HTML_NAME(name)(...) HTML_PRINT_TAG(HTML_STR(name), type, __VA_ARGS__)
+#define HTML_TAG(name) HTML_TAG0(name, HTML_NORMAL)
+#define HTML_TAGS(name) HTML_TAG0(name, HTML_SCLOSE)
+#define HTML_TAGN(name) HTML_TAG0(name, HTML_NCLOSE)
 
 IFNDEF HTML_META_I
 DEFINE HTML_META_I
+
 /* Naively extracted from https://github.com/mdn/content/tree/main/files/en-us/web/html/element */
 HTML_TAG(a)
 HTML_TAG(abbr)
 HTML_TAG(acronym)
 HTML_TAG(address)
 HTML_TAG(applet)
-HTML_TAG(area)
 HTML_TAG(aside)
 HTML_TAG(audio)
 HTML_TAG(b)
-HTML_TAG(base)
 HTML_TAG(basefont)
 HTML_TAG(bdi)
 HTML_TAG(bdo)
@@ -40,13 +33,11 @@ HTML_TAG(big)
 HTML_TAG(blink)
 HTML_TAG(blockquote)
 HTML_TAG(body)
-HTML_TAG(br)
 HTML_TAG(button)
 HTML_TAG(caption)
 HTML_TAG(center)
 HTML_TAG(cite)
 HTML_TAG(code)
-HTML_TAG(col)
 HTML_TAG(data)
 HTML_TAG(datalist)
 HTML_TAG(dd)
@@ -59,7 +50,6 @@ HTML_TAG(div)
 HTML_TAG(dl)
 HTML_TAG(dt)
 HTML_TAG(em)
-HTML_TAG(embed)
 HTML_TAG(fieldset)
 HTML_TAG(figcaption)
 HTML_TAG(figure)
@@ -71,27 +61,15 @@ HTML_TAG(head)
 HTML_TAG(header)
 HTML_TAG(heading_elements)
 HTML_TAG(hgroup)
-HTML_TAG(hr)
-HTML_TAG(html)
 HTML_TAG(i)
 HTML_TAG(iframe)
 HTML_TAG(image)
-HTML_TAG(img)
-HTML_TAG(input)
 HTML_TAG(ins)
 HTML_TAG(kbd)
-HTML_TAG(keygen)
 HTML_TAG(label)
-/* Workaround for obvious reasons */
-#ifdef PREFIX
-HTML_TAG(main)
-#else
-HTML_TAG(html_main)
-#endif /* !PREFIX */
 HTML_TAG(map)
 HTML_TAG(marquee)
 HTML_TAG(menu)
-HTML_TAG(meta)
 HTML_TAG(meter)
 HTML_TAG(nav)
 HTML_TAG(nobr)
@@ -101,7 +79,6 @@ HTML_TAG(noscript)
 HTML_TAG(optgroup)
 HTML_TAG(output)
 HTML_TAG(p)
-HTML_TAG(param)
 HTML_TAG(picture)
 HTML_TAG(plaintext)
 HTML_TAG(portal)
@@ -118,7 +95,6 @@ HTML_TAG(section)
 HTML_TAG(select)
 HTML_TAG(shadow)
 HTML_TAG(slot)
-HTML_TAG(source)
 HTML_TAG(spacer)
 HTML_TAG(span)
 HTML_TAG(strong)
@@ -134,14 +110,41 @@ HTML_TAG(textarea)
 HTML_TAG(th)
 HTML_TAG(time)
 HTML_TAG(tr)
-HTML_TAG(track)
 HTML_TAG(tt)
 HTML_TAG(u)
 HTML_TAG(ul)
 HTML_TAG(var)
 HTML_TAG(video)
-HTML_TAG(wbr)
 HTML_TAG(xmp)
+
+HTML_TAGS(area)
+HTML_TAGS(base)
+HTML_TAGS(br)
+HTML_TAGS(col)
+HTML_TAGS(embed)
+HTML_TAGS(hr)
+HTML_TAGS(img)
+HTML_TAGS(input)
+HTML_TAGS(link)
+HTML_TAGS(meta)
+HTML_TAGS(param)
+HTML_TAGS(source)
+HTML_TAGS(track)
+HTML_TAGS(wbr)
+HTML_TAGS(command)
+HTML_TAGS(keygen)
+HTML_TAGS(menuitem)
+
+/* Workaround for obvious reasons */
+#ifdef HTML_PREFIX
+HTML_TAG(main)
+#else
+HTML_TAG(html_main)
+#endif /* !HTML_PREFIX */
+
+DEFINE HTML_NAME(root)(...) HTML_PRINT_TAG("html", HTML_NORMAL, __VA_ARGS__)
+DEFINE HTML_NAME(doctype)(...) HTML_PRINT_TAG("!DOCTYPE html", HTML_NCLOSE, __VA_ARGS__)
+
 ENDIF /* !HTML_META_I */
 
 #endif /* !HTML_META_H */
