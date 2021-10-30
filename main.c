@@ -6,8 +6,8 @@ int main(__attribute__((unused)) int argc, __attribute__((unused)) char* argv[])
 	html(lang="en") {
 		body() {
 			p() {
-				span() printf("Hello, ");
-				span() printf("World!");
+				span() html_printf("Hello, ");
+				span() html_printf("World!");
 			}
 		}
 	}
