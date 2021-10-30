@@ -1,18 +1,18 @@
-CFLAGS:=-Wall -Wextra -pedantic
-CPPFLAGS:=-P -w -UPREFIX
+CFLAGS:=-Wall -Wextra -pedantic -I./src
+CPPFLAGS:=-P -w -UHTML_PREFIX
 ifdef DEBUG
 CFLAGS+=-O0 -g
 else
 CFLAGS+=-O3 -flto
 endif
 
-all: html_meta.i html.out
+all: src/html_meta.i test.out
 
-html.out: html.c main.c
+test.out: src/html.c test/main.c
 	$(CC) $^ -o $@ $(CFLAGS)
 
-html_meta.i: html_meta.h
+src/%.i: src/%.h
 	$(CPP) $< $(CPPFLAGS) > $@
 
 clean:
-	rm -rf *.out *.i
+	rm -rf *.out src/*.i
