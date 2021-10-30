@@ -27,6 +27,10 @@ extern thread_local html_printf_t html_printf;
 extern thread_local html_tag_open_t html_tag_open;
 extern thread_local html_tag_close_t html_tag_close;
 
+int _html_printf(const char* restrict fmt, ...);
+void _html_tag_open(char* tag, char* attrs);
+void _html_tag_close(char* tag);
+
 #ifdef __cplusplus
 }
 #endif
