@@ -1,5 +1,5 @@
 CFLAGS:=-Wall -Wextra -pedantic
-CPPFLAGS:=-P -w -DDEFINE=\#define -DIFNDEF=\#ifndef -DENDIF=\#endif -UPREFIX
+CPPFLAGS:=-P -w -UPREFIX
 ifdef DEBUG
 CFLAGS+=-O0 -g
 else

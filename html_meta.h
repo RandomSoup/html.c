@@ -3,6 +3,11 @@
 
 #include "html_common.h"
 
+#define HASH #
+#define DEFINE HASH define
+#define IFNDEF HASH ifndef
+#define ENDIF HASH endif
+
 #ifdef PREFIX
 #define HTML_CAT1(a, b) a##b
 #else
